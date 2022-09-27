@@ -13,12 +13,14 @@ class Photo(CommonModel):
         null=True,
         blank=True,
         on_delete=models.CASCADE,
+        related_name="photos",
     )
     experience = models.ForeignKey(
         "experiences.Experience",
         null=True,
         blank=True,
         on_delete=models.CASCADE,
+        related_name="photos",
     )
 
     def __str__(self) -> str:
