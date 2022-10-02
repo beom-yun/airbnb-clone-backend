@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+THRID_PARTY_APPS = [
+    "rest_framework",
+]
+
 CUSTOM_APPS = [
     "common.apps.CommonConfig",
     "users.apps.UsersConfig",
@@ -52,7 +56,7 @@ SYSTEM_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS
+INSTALLED_APPS = SYSTEM_APPS + THRID_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
