@@ -1,3 +1,4 @@
+from django.conf import settings
 from multiprocessing.sharedctypes import Value
 from rest_framework.views import APIView
 from django.db import transaction
@@ -206,7 +207,7 @@ class RoomReviews(APIView):
             page = int(page)
         except ValueError:
             page = 1
-        page_size = 3
+        page_size = settings.PAGE_SIZE
         start = (page - 1) * page_size
         end = start + page_size
         room = self.get_object(pk)
@@ -232,7 +233,7 @@ class RoomAmenities(APIView):
             page = int(page)
         except ValueError:
             page = 1
-        page_size = 3
+        page_size = PAGE_SIZE
         start = (page - 1) * page_size
         end = start + page_size
         room = self.get_object(pk)
@@ -243,3 +244,11 @@ class RoomAmenities(APIView):
         return Response(
             serializer.data,
         )
+
+
+class RoomPhotos(APIView):
+    def get_object(self, pk):
+        pass
+
+    def post(self, request, pk):
+        pass
