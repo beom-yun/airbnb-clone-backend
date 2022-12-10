@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Experiences, Perk
+from .models import Experience, Perk
 
 
-@admin.register(Experiences)
+@admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
     list_display = (
         "name",

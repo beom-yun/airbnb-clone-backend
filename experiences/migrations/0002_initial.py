@@ -10,16 +10,21 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ("experiences", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("rooms", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="room",
-            name="owner",
+            model_name="experience",
+            name="host",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
             ),
+        ),
+        migrations.AddField(
+            model_name="experience",
+            name="perks",
+            field=models.ManyToManyField(to="experiences.perk"),
         ),
     ]
