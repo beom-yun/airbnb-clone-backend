@@ -13,7 +13,6 @@ class RoomAdmin(admin.ModelAdmin):
         "owner",
         "created_at",
     )
-
     list_filter = (
         "country",
         "city",
@@ -25,6 +24,7 @@ class RoomAdmin(admin.ModelAdmin):
         "amenities",
         "created_at",
     )
+    search_fields = ("owner__username",)
 
 
 @admin.register(Amenity)
@@ -35,7 +35,6 @@ class AmenityAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-
     readonly_fields = (
         "created_at",
         "updated_at",
