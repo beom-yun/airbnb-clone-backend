@@ -42,7 +42,7 @@ class Room(CommonModel):
     def rating(self):
         count = self.reviews.count()
         if not count:
-            return "No Reviews"
+            return 0
 
         total_rating = 0
         for review in self.reviews.all().values("rating"):
