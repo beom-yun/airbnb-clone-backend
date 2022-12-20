@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import (
@@ -182,8 +183,8 @@ class RoomReviews(APIView):
             page = int(request.query_params.get("page", 1))
         except ValueError:
             page = 1
-        page_size = 3
-        start, end = (page - 1) * page_size, page * page_size
+        settings.PAGE_SIZE = 3
+        start, end = (page - 1) * settings.PAGE_SIZE, page * settings.PAGE_SIZE
 
         room = self.get_object(pk)
         serializer = ReviewSerializer(room.reviews.all()[start:end], many=True)
@@ -202,9 +203,20 @@ class RoomAmenities(APIView):
             page = int(request.query_params.get("page", 1))
         except ValueError:
             page = 1
-        page_size = 3
-        start, end = (page - 1) * page_size, page * page_size
+        settings.PAGE_SIZE = 3
+        start, end = (page - 1) * settings.PAGE_SIZE, page * settings.PAGE_SIZE
 
         room = self.get_object(pk)
         serializer = AmenitySerializer(room.amenities.all()[start:end], many=True)
         return Response(serializer.data)
+
+
+class RoomPhotos(APIView):
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
+            raise NotFound
+
+    def post(self, request, pk):
+        pass
