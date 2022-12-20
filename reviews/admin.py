@@ -4,7 +4,7 @@ from .models import Review
 
 class WordFilter(admin.SimpleListFilter):
     title = "Filter by words!"
-    parameter_name = "potato"
+    parameter_name = "word"
 
     def lookups(self, request, model_admin):
         return [
