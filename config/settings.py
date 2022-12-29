@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 CUSTOM_APPS = [
@@ -149,7 +150,8 @@ AUTH_USER_MODEL = "users.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",  # Default value
-        "config.authentication.TrustMeBroAuthentication",
+        "config.authentication.TrustMeBroAuthentication",  # 멍청한 방법
+        "rest_framework.authentication.TokenAuthentication",
     ]
 }
 
