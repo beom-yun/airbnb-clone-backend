@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ParseError, NotFound
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from .serializers import PrivateUserSerializer
 from .models import User
 
@@ -116,17 +116,47 @@ class JWTLogIn(APIView):
 
 class GithubLogIn(APIView):
     def post(self, request):
-        code = request.data.get("code")
-        access_token = requests.post(
-            f"https://github.com/login/oauth/access_token?code={code}&client_id=c8bf4ba3aa2c59648dcf&client_secret={settings.GH_SECRET}",
-            headers={"Accept": "application/json"},
-        )
-        access_token = access_token.json().get("access_token")
-        user_data = requests.get(
-            "https://api.github.com/user",
-            headers={
-                "Authorization": f"Bearer {access_token}",
-                "Accept": "application/json",
-            },
-        )
-        user_data = user_data.json()
+        try:
+            code = request.data.get("code")
+            access_token = requests.post(
+                f"https://github.com/login/oauth/access_token?code={code}&client_id=dfb36e868b33adcb300f&client_secret={settings.GH_SECRET}",
+                headers={"Accept": "application/json"},
+            )
+            access_token = access_token.json().get("access_token")
+
+            user_data = requests.get(
+                "https://api.github.com/user",
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "Accept": "application/json",
+                },
+            )
+            user_data = user_data.json()
+
+            user_emails = requests.get(
+                "https://api.github.com/user/emails",
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "Accept": "application/json",
+                },
+            )
+            user_emails = user_emails.json()
+
+            try:
+                user = User.objects.get(email=user_emails[0]["email"])
+                login(request, user)
+                return Response(status=HTTP_200_OK)
+            except User.DoesNotExist:
+                user = User.objects.create(
+                    username=user_data.get("login"),
+                    email=user_emails[0]["email"],
+                    name=user_data.get("name"),
+                    avatar=user_data.get("avatar_url"),
+                )
+                user.set_unusable_password()
+                user.save()
+                login(request, user)
+                return Response(status=HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(status=HTTP_400_BAD_REQUEST)
