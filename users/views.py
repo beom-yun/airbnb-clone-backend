@@ -28,7 +28,7 @@ class Me(APIView):
             serializer = PrivateUserSerializer(user)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class Users(APIView):
@@ -45,7 +45,7 @@ class Users(APIView):
             serializer = PrivateUserSerializer(user)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class PublicUser(APIView):
@@ -88,7 +88,7 @@ class LogIn(APIView):
             login(request, user)
             return Response({"ok": "Welcome!"})
         else:
-            return Response({"error": "wrong password"})
+            return Response({"error": "wrong password"}, status=HTTP_400_BAD_REQUEST)
 
 
 class LogOut(APIView):
@@ -111,7 +111,7 @@ class JWTLogIn(APIView):
             token = jwt.encode({"pk": user.pk}, settings.SECRET_KEY, algorithm="HS256")
             return Response({"token": token})
         else:
-            return Response({"error": "wrong password"})
+            return Response({"error": "wrong password"}, status=HTTP_400_BAD_REQUEST)
 
 
 class GithubLogIn(APIView):
