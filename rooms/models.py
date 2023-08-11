@@ -2,7 +2,7 @@ from django.db import models
 from common.models import CommonModel
 
 
-class Rooms(CommonModel):
+class Room(CommonModel):
 
     """Room Model Definition"""
 
@@ -29,4 +29,5 @@ class Amenity(CommonModel):
     """Amenity Definition"""
 
     name = models.CharField(max_length=150)
-    description = models.CharField(max_length=150, null=True)
+    description = models.CharField(max_length=150, null=True, blank=True)
+    # null=True : DB 상에서 빈칸일 수 있는 것 / blank=True : 웹 form 상에서 빈칸일 수 있는 것
