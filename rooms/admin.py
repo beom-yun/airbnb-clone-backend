@@ -8,9 +8,9 @@ class RoomAdmin(admin.ModelAdmin):
         "name",
         "price",
         "kind",
+        "total_amenities",
         "owner",
         "created_at",
-        "updated_at",
     )
     list_filter = (
         "country",
@@ -19,10 +19,7 @@ class RoomAdmin(admin.ModelAdmin):
         "kind",
         "amenities",
     )
-    readonly_fields = (
-        "created_at",
-        "updated_at",
-    )
+    readonly_fields = ("created_at",)
 
 
 @admin.register(Amenity)
