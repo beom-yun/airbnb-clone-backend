@@ -1,5 +1,9 @@
 from django.http import HttpResponse
 
 
-def say_hello(request):
-    return HttpResponse("hello")
+def see_all_rooms(request):
+    return HttpResponse("All rooms!")
+
+
+def see_one_rooms(request, room_id):
+    return HttpResponse(f"Room #{room_id}")
