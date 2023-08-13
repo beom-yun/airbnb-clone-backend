@@ -21,6 +21,10 @@ class RoomAdmin(admin.ModelAdmin):
         "amenities",
     )
     readonly_fields = ("created_at",)
+    search_fields = (
+        "name",
+        "price",
+    )
 
 
 @admin.register(Amenity)
