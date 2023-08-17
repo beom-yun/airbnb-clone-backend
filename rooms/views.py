@@ -3,7 +3,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.exceptions import NotFound
 from .models import Room, Amenity
-from .serializers import AmenitySerializer
+from .serializers import RoomSerializer, AmenitySerializer
+
+
+class Rooms(APIView):
+    def get(self, request):
+        all_rooms = Room.objects.all()
+        serializer = RoomSerializer(all_rooms, many=True)
+        return Response(serializer.data)
 
 
 class Amenities(APIView):
