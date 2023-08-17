@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, NotAuthenticated
 from .models import Room, Amenity
 from .serializers import RoomDetailSerializer, RoomListSerializer, AmenitySerializer
 
@@ -13,13 +13,16 @@ class Rooms(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = RoomDetailSerializer(data=request.data)
-        if serializer.is_valid():
-            room = serializer.save()
-            serializer = RoomDetailSerializer(room)
-            return Response(serializer.data)
+        if request.user.is_authenticated:
+            serializer = RoomDetailSerializer(data=request.data)
+            if serializer.is_valid():
+                room = serializer.save(owner=request.user)
+                serializer = RoomDetailSerializer(room)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         else:
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            raise NotAuthenticated
 
 
 class RoomDetail(APIView):
