@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
-from rest_framework.exceptions import NotFound, NotAuthenticated
+from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
 from .models import Room, Amenity
 from .serializers import RoomDetailSerializer, RoomListSerializer, AmenitySerializer
+from categories.models import Category
 
 
 class Rooms(APIView):
@@ -16,7 +17,17 @@ class Rooms(APIView):
         if request.user.is_authenticated:
             serializer = RoomDetailSerializer(data=request.data)
             if serializer.is_valid():
-                room = serializer.save(owner=request.user)
+                category_pk = request.data.get("category")
+                if not category_pk:
+                    raise ParseError
+                try:
+                    category = Category.objects.get(pk=category_pk)
+                    if category.kind == Category.CategoryKindChoices.EXPERIENCES:
+                        raise ParseError("category 잘못 선택")
+                except Category.DoesNotExist:
+                    raise ParseError
+
+                room = serializer.save(owner=request.user, category=category)
                 serializer = RoomDetailSerializer(room)
                 return Response(serializer.data)
             else:
