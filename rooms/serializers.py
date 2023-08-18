@@ -20,7 +20,6 @@ class RoomDetailSerializer(ModelSerializer):
     category = CategorySerializer(read_only=True)
     rating = SerializerMethodField()
     is_owner = SerializerMethodField()
-    reviews = ReviewSerializer(read_only=True, many=True)
 
     def get_rating(self, room):
         return room.rating()
