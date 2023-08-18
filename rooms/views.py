@@ -16,7 +16,9 @@ from categories.models import Category
 class Rooms(APIView):
     def get(self, request):
         all_rooms = Room.objects.all()
-        serializer = RoomListSerializer(all_rooms, many=True)
+        serializer = RoomListSerializer(
+            all_rooms, many=True, context={"request": request}
+        )
         return Response(serializer.data)
 
     def post(self, request):
@@ -59,7 +61,7 @@ class RoomDetail(APIView):
 
     def get(self, request, pk):
         room = self.get_object(pk)
-        serializer = RoomDetailSerializer(room)
+        serializer = RoomDetailSerializer(room, context={"request": request})
         return Response(serializer.data)
 
     def delete(self, request, pk):
