@@ -152,7 +152,11 @@ class RoomBookings(APIView):
         room = self.get_object(pk)
         serializer = CreateRoomBookingSerializer(data=request.data)
         if serializer.is_valid():
-            return Response({"ok": True})
+            new_booking = serializer.save(
+                kind=Booking.BookingKindChoices.ROOM, room=room, user=request.user
+            )
+            serializer = PublicBookingSerializer(new_booking)
+            return Response(serializer.data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
